@@ -24,12 +24,24 @@
     :year 1967}
    {:event "Unix"
     :year 1969}
+   {:event "Forth"
+    :year 1970}
    {:event "Pascal"
     :year 1970}
    {:event "C"
     :year 1972}
+   {:event "Smalltalk"
+    :year 1972}
+   {:event "Prolog"
+    :year 1972}
+   {:event "ML"
+    :year 1973}
    {:event "Scheme"
     :year 1975}
+   {:event "sh"
+    :year 1977}
+   {:event "AWK"
+    :year 1979}
    {:event "MS-DOS"
     :year 1981}
    {:event "Microsoft Word"
@@ -60,5 +72,23 @@
     :year 1995}
    {:event "C#"
     :year 2000}
+   {:event "D"
+    :year 2001}
+   {:event "Scala"
+    :year 2003}
+   {:event "F#"
+    :year 2005}
    {:event "Clojure"
-    :year 2007}])
+    :year 2007}
+   {:event "Go"
+    :year 2009}
+   {:event "Rust"
+    :year 2010}
+   {:event "Kotlin"
+    :year 2011}
+   {:event "Julia"
+    :year 2012}
+   {:event "Swift"
+    :year 2015}
+   {:event "Zig"
+    :year 2015}])
