@@ -1,5 +1,6 @@
 (ns timelines.core
   (:require [timelines.little-history :as d]
+            [garden.core :refer [css]]
             [hiccup.core :refer [html]]
             [hiccup.page :refer [html5 doctype include-css include-js]]
             [tick.alpha.api :as t]))
@@ -20,19 +21,25 @@
 
 (defn together [& xs] (into [] (sequence cat xs)))
 
+(def hinc (partial + 0.5))
+
 (defn timeline [data]
   (let [initial-year 1945
         end-year     (t/int (t/year (t/now)))
-        year-range   [initial-year end-year]]
+        year-range   [initial-year end-year]
+
+        pad 40
+        w   1200
+        h   360]
     (together
-     [:svg {:viewBox "0 0 840 360"
-            :width   "840px"
-            :height  "360px"
+     [:svg {:viewBox (str "0 0 " (+ pad w) " 360")
+            :width   (str (+ pad w) "px")
+            :height  (str h "px")
             :xlmns   "http://www.w3.org/2000/svg"}]
      (let [strong (set (decades initial-year end-year))]
        (reduce (fn [coll year]
-                 (let [x    (remap year-range [16.5 800.5] year)
-                       snap (+ 0.5 (int x))]
+                 (let [x    (remap year-range [(hinc pad) (hinc w)] year)
+                       snap (hinc (int x))]
                    (if (strong year)
                      (conj coll
                            [:line {:x1     snap :x2 snap
@@ -47,20 +54,28 @@
                                    :stroke "lightgray"}]))))
                []
                (range initial-year (inc end-year))))
-     (reduce (fn [coll {:keys [event year]}]
-               (println "y" year)
-               (let [x (remap year-range [16.5 800.5] year)]
-                 (conj coll
-                       [:circle {:fill "#DD0000" :cx x :cy 150 :r 5}]
-                       [:text {:transform (format "translate(%s, 170) rotate(45)" x)}
-                        event])))
-             []
-             data))))
+     (loop [svg [], events data, year->events {}]
+       (if (seq events)
+         (let [{:keys [event year]} (first events)
+               vertical-margin      30
+               x                    (remap year-range [(hinc pad) (hinc w)] year)
+               y                    (+ 150 (* vertical-margin (get year->events year 0)))]
+               (recur (conj svg
+                            [:circle {:fill "#DD0000" :cx x :cy y :r 4}]
+                            [:text {:transform (format "translate(%s, %s) rotate(45)" x (+ 10 y))}
+                             event])
+                      (rest events)
+                      (update year->events year (fnil inc 0))))
+         svg)))))
 
 
 (defn document []
   (str (:html5 doctype)
        (html [:html {:lang "en"}
+              [:head
+               [:style (css [:svg {:font-family   "Triplicate T4c"
+                                   :font-size     "12px"
+                                   :letter-spacing "-0.75px"}])]]
               [:body (timeline d/events)]])))
 
 (spit (str (System/getenv "PWD") "/index.html") (document))
