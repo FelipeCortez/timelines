@@ -23,6 +23,24 @@
 
 (def hinc (partial + 0.5))
 
+(defn event->svg [year-range pad w h year->events {:keys [event year years]}]
+  (if year
+    (let [vertical-margin 32
+          x               (remap year-range [(hinc pad) (hinc w)] year)
+          y               (+ 150 (* vertical-margin (get year->events year 0)))]
+      [[:circle {:fill "#DD0000" :cx x :cy y :r 4}]
+       [:text {:transform (format "translate(%s, %s) rotate(45)" x (+ 10 y))}
+        event]])
+    (let [vertical-margin 32
+          x1              (remap year-range [(hinc pad) (hinc w)] (:from years))
+          x2              (remap year-range [(hinc pad) (hinc w)] (:to years))
+          y               (+ 150 (* vertical-margin (get year->events year 0)))]
+      [[:circle {:fill "#DD0000" :cx x1 :cy y :r 4}]
+       [:circle {:fill "#DD0000" :cx x2 :cy y :r 4}]
+       [:rect {:fill "#DD0000" :x x1 :y (- y 2) :width (- x2 x1) :height 4}]
+       [:text {:transform (format "translate(%s, %s) rotate(45)" x1 (+ 10 y))}
+        event]])))
+
 (defn timeline [data]
   (let [initial-year 1945
         end-year     (t/int (t/year (t/now)))
@@ -56,16 +74,14 @@
                (range initial-year (inc end-year))))
      (loop [svg [], events data, year->events {}]
        (if (seq events)
-         (let [{:keys [event year]} (first events)
-               vertical-margin      30
-               x                    (remap year-range [(hinc pad) (hinc w)] year)
-               y                    (+ 150 (* vertical-margin (get year->events year 0)))]
-               (recur (conj svg
-                            [:circle {:fill "#DD0000" :cx x :cy y :r 4}]
-                            [:text {:transform (format "translate(%s, %s) rotate(45)" x (+ 10 y))}
-                             event])
-                      (rest events)
-                      (update year->events year (fnil inc 0))))
+         (let [{:keys [year years]} (first events)]
+           (recur (apply conj svg (event->svg year-range pad w h year->events (first events)))
+                  (rest events)
+                  (if year
+                    (update year->events year (fnil inc 0))
+                    (reduce (fn [year->events year] (update year->events year (fnil inc 0)))
+                            year->events
+                            (range (:from years) (inc (:to years)))))))
          svg)))))
 
 
