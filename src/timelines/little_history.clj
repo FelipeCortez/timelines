@@ -1,11 +1,7 @@
 (ns timelines.little-history)
 
 (def events
-  [{:event "Plankalkül"
-    :year 1945}
-   {:event "The Mathematical Theory of Communication"
-    :year 1948}
-   {:event "FORTRAN"
+  [{:event "FORTRAN"
     :year 1957}
    {:event "LISP"
     :years {:from 1958
@@ -14,10 +10,8 @@
     :year 1960}
    {:event "APL"
     :year 1962}
-   {:event "ASCII"
-    :year 1963}
-   {:event "Sketchpad"
-    :year 1963}
+   {:event "BASIC"
+    :year 1964}
    {:event "Simula"
     :year 1965}
    {:event "LOGO"
@@ -42,16 +36,16 @@
     :year 1977}
    {:event "AWK"
     :year 1979}
-   {:event "MS-DOS"
-    :year 1981}
-   {:event "Microsoft Word"
-    :year 1983}
+   {:event "Ada"
+    :year 1980}
    {:event "MATLAB"
     :year 1984}
    {:event "Common Lisp"
     :year 1984}
    {:event "C++"
     :year 1985}
+   {:event "Eiffel"
+    :year 1986}
    {:event "Perl"
     :year 1987}
    {:event "HyperCard"
@@ -60,8 +54,8 @@
     :year 1990}
    {:event "Haskell"
     :year 1990}
-   {:event "Windows 3.0"
-    :year 1990}
+   {:event "Lua"
+    :year 1995}
    {:event "Java"
     :year 1995}
    {:event "JavaScript"
@@ -69,6 +63,10 @@
    {:event "PHP"
     :year 1995}
    {:event "Racket"
+    :year 1995}
+   {:event "OCaml"
+    :year 1995}
+   {:event "Ruby"
     :year 1995}
    {:event "C#"
     :year 2000}
@@ -92,3 +90,19 @@
     :year 2015}
    {:event "Zig"
     :year 2015}])
+
+(def more-events
+  [{:event "Plankalkül"
+    :year  1945
+    :tags  [:paper]}
+   {:event "The Mathematical Theory of Communication"
+    :year  1948
+    :tags  [:paper]}
+   {:event "Sketchpad"
+    :year  1963}
+   {:event "ASCII"
+    :year 1963}
+   {:event "MS-DOS"
+    :year 1981}
+   {:event "Microsoft Word"
+    :year  1983}])
